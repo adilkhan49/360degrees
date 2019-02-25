@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 import dash_table
 
 from werkzeug.serving import run_simple
-
+import base64
 
 import pandas as pd
 import numpy as np
@@ -15,6 +15,9 @@ import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+
+image_filename = 'logo.png'
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -84,7 +87,6 @@ def refresh():
 
 
 
-image_filename = '/Users/Adil/Documents/Data Science/NLTK/wc.png'
 df = refresh()
 if prod:
     app = dash.Dash()
@@ -101,6 +103,9 @@ app.layout = html.Div([
     html.H1(
         '360 Degrees'
     ),
+
+    
+    # html.Img(src='data:image/png;base64,{}'.format(encoded_image), style='vertical-align: right;'),
     
     html.Div(
         '\nInsights and analytics dashboard\n'
@@ -212,7 +217,3 @@ if prod:
 else:
     run_simple('localhost', 8080, app.server,
                use_reloader=True, use_debugger=True)
-# if __name__ != '__main__':
-#     app.run_server(debug=True,port=8056)    
-# if __name__ == '__main__':
-#     app.run_server(port = 8052)
